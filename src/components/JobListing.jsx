@@ -1,15 +1,33 @@
+import { useState } from "react";
 import PropTypes from "prop-types";
 
 const JobListing = ({ job }) => {
+  const [showFullDescription, setShowFullDescription] = useState(false);
+
+  const toggleDescription = () => {
+    setShowFullDescription(!showFullDescription);
+  };
+
+  let description = job.description;
+
+  if (!showFullDescription) {
+    description = description.substring(0, 90) + "...";
+  }
+
   return (
     <div className="bg-white rounded-xl shadow-md relative">
       <div className="p-4">
         <div className="mb-6">
           <div className="text-gray-600 my-2">{job.type}</div>
-          <h3 className="text-xl font-bold">{job.title}</h3>
+          <div className="mb-5">
+            {description}
+            <button onClick={toggleDescription} className="text-blue-500 ml-2">
+              {showFullDescription ? "Show Less" : "Show More"}
+            </button>
+          </div>
         </div>
 
-        <div className="mb-5">{job.description}</div>
+        <div className="mb-5">{description}</div>
 
         <h3 className="text-indigo-500 mb-2">{job.salary}</h3>
 
@@ -31,12 +49,11 @@ const JobListing = ({ job }) => {
     </div>
   );
 };
-
 JobListing.propTypes = {
   job: PropTypes.shape({
+    description: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
     salary: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
